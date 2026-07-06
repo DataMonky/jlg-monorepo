@@ -1,0 +1,100 @@
+# =========================================================================
+# .NET 10 / C# Core
+# =========================================================================
+
+# Build artifacts
+**/bin/
+**/obj/
+
+# Project-specific user settings and configurations
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Rider & Visual Studio Cache / Templates
+.vs/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln.docstates
+
+# Publish output
+**/publish/
+
+# User-secrets configuration file
+# (Do not commit actual secrets to source control)
+**/secrets.json
+
+# .NET Core infrastructure
+project.lock.json
+project.fragment.lock.json
+
+# Backup and restore files
+*.bak
+*.cache
+
+# =========================================================================
+# Angular / Node.js
+# =========================================================================
+
+# Dependencies
+**/node_modules/
+
+# Build outputs
+**/dist/
+**/.angular/
+
+# Logs
+logs
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+
+# Runtime data
+pids
+*.pid
+*.seed
+*.pid.lock
+
+# Local environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Serverless Webpack directories
+.webpack/
+
+# Optional npm cache directory
+.npm
+
+# Output of 'npm pack'
+*.tgz
+
+# Yarn Integrity file
+.yarn-integrity
+
+# =========================================================================
+# Operating System & Editors
+# =========================================================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Windows
+Thumbs.db
+Ehthumbs.db
+Desktop.ini
+
+# VS Code
+.vscode/*
+!.vscode/extensions.json
+!.vscode/launch.json
+!.vscode/tasks.json
