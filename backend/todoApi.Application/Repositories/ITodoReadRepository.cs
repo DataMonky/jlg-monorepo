@@ -4,5 +4,5 @@ using todoApi.Application.Models;
 
 public interface ITodoReadRepository
 {
-    Task<List<Todo>> GetAllAsync();
+    Task<List<Todo>> GetAllAsync(CancellationToken cancellationToken = default);
 }

@@ -14,6 +14,6 @@ public class UpdateTodoHandler(ITodoWriteRepository repo)
         {
             Name = request.Name,
             IsComplete = request.IsComplete
-        });
+        }, cancellationToken);
     }
 }

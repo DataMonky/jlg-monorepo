@@ -11,6 +11,6 @@ public class GetAllTodosHandler(ITodoReadRepository repo)
 {
     public async Task<List<Todo>> Handle(GetAllTodosQuery request, CancellationToken cancellationToken)
     {
-        return await repo.GetAllAsync();
+        return await repo.GetAllAsync(cancellationToken);
     }
 }

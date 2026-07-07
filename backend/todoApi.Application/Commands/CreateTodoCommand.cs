@@ -20,6 +20,6 @@ public class CreateTodoHandler(
         }
 
         var todo = new Todo { Name = request.Name, IsComplete = request.IsComplete };
-        return await writeRepo.CreateAsync(todo);
+        return await writeRepo.CreateAsync(todo, cancellationToken);
     }
 }

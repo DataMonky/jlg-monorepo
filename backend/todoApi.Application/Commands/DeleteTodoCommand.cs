@@ -10,6 +10,6 @@ public class DeleteTodoHandler(ITodoWriteRepository repo)
 {
     public async Task<bool> Handle(DeleteTodoCommand request, CancellationToken cancellationToken)
     {
-        return await repo.DeleteAsync(request.Id);
+        return await repo.DeleteAsync(request.Id, cancellationToken);
     }
 }
