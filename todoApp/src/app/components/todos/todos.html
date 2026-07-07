@@ -1,0 +1,20 @@
+<h1>Todos</h1>                                                                                                                          
+                                                                                         
+  @if (error()) {
+    <p>{{ error() }}</p>
+  }                                                                                                                                       
+   
+  @if (loading()) {                                                                                                                       
+    <p>Loading...</p>                                                                    
+  } @else {
+    <ul>
+      @for (todo of todos(); track todo.id) {
+        <li>
+          {{ todo.name }} - {{ todo.isComplete ? 'Done' : 'Pending' }}
+        </li>                                                                                                                             
+      }
+      @empty {                                                                                                                            
+        <li>No todos yet.</li>                                                                                                            
+      }
+    </ul>                                                                                                                                 
+  }  
