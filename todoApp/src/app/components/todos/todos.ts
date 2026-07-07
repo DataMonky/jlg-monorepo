@@ -59,6 +59,23 @@ export class TodosComponent implements OnInit {
     });
   }
 
+  toggleComplete(todo: TodoItem): void {                                                                                                  
+    this.error.set(null);                                                                                                                 
+                                                                                                                                          
+    const updated = { ...todo, isComplete: !todo.isComplete };
+    this.todoService.update(todo.id, updated).subscribe({                                                                                 
+      next: () => {                                                                      
+        this.todos.update((currentTodos) =>
+          currentTodos.map((t) => (t.id === todo.id ? updated : t))                                                                       
+        );
+      },                                                                                                                                  
+      error: (err) => {                                                                  
+        console.error('Failed to update todo:', err);
+        this.error.set('Failed to update todo. Please try again.');                                                                       
+      },
+    });                                                                                                                                   
+  } 
+
   private loadTodos(): void {
     this.loading.set(true);
     this.error.set(null);

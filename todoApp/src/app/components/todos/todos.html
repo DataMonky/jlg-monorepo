@@ -13,7 +13,10 @@
     <ul>
       @for (todo of todos(); track todo.id) {
         <li>
-          {{ todo.name }} - {{ todo.isComplete ? 'Done' : 'Pending' }}
+            <input type="checkbox"                                                               
+           [checked]="todo.isComplete" 
+           (change)="toggleComplete(todo)" />
+          <span [class.completed]="todo.isComplete">{{ todo.name }}</span>
           <button (click)="deleteTodo(todo)">Delete</button>
         </li>                                                                                                                             
       }
