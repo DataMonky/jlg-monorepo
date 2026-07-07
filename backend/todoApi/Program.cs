@@ -2,6 +2,7 @@ using MediatR;
 using todoApi.Infrastructure;
 using todoApi.Endpoints;
 using todoApi.Application.Commands;
+using todoApi;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddMediatR(cfg =>
@@ -23,7 +24,14 @@ builder.Services.AddOpenApiDocument(config =>
     config.Version = "v1";
 });
 
+// Register essential problem details and your basic handler
+builder.Services.AddProblemDetails();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+
 var app = builder.Build();
+
+// Must be at the very top of your middleware pipeline
+app.UseExceptionHandler(); 
 
 app.UseCors();
 

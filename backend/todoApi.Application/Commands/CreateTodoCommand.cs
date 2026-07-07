@@ -1,3 +1,4 @@
+using todoApi.Application.Exceptions;
 namespace todoApi.Application.Commands;
 
 using MediatR;
@@ -16,7 +17,7 @@ public class CreateTodoHandler(
         var existing = await readRepo.GetAllAsync();
         if (existing.Any(t => string.Equals(t.Name, request.Name, StringComparison.OrdinalIgnoreCase)))
         {
-            throw new InvalidOperationException("A todo with this name already exists.");
+            throw new DuplicateResourceException("A todo with this name already exists.");
         }
 
         var todo = new Todo { Name = request.Name, IsComplete = request.IsComplete };
