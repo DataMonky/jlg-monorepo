@@ -3,7 +3,10 @@
   @if (error()) {
     <p>{{ error() }}</p>
   }                                                                                                                                       
-   
+ <form [formGroup]="form" (ngSubmit)="onSubmit()">                                                                                       
+    <input formControlName="name" type="text" placeholder="New todo name" />             
+    <button type="submit" [disabled]="form.invalid">Add</button>                                                                          
+  </form>
   @if (loading()) {                                                                                                                       
     <p>Loading...</p>                                                                    
   } @else {
@@ -11,6 +14,7 @@
       @for (todo of todos(); track todo.id) {
         <li>
           {{ todo.name }} - {{ todo.isComplete ? 'Done' : 'Pending' }}
+          <button (click)="deleteTodo(todo)">Delete</button>
         </li>                                                                                                                             
       }
       @empty {                                                                                                                            

@@ -51,4 +51,24 @@ if (app.Environment.IsDevelopment())
 app.MapGet("/todoitems", async (TodoDb db) =>
     await db.Todos.ToListAsync());
 
+app.MapPost("/todoitems", async (Todo todo, TodoDb db) =>
+{
+    db.Todos.Add(todo);
+    await db.SaveChangesAsync();
+
+    return Results.Created($"/todoitems/{todo.Id}", todo);
+});
+
+app.MapDelete("/todoitems/{id}", async (int id, TodoDb db) =>
+{
+    if (await db.Todos.FindAsync(id) is Todo todo)
+    {
+        db.Todos.Remove(todo);
+        await db.SaveChangesAsync();
+        return Results.NoContent();
+    }
+
+    return Results.NotFound();
+});
+
 app.Run();
