@@ -13,14 +13,6 @@ export class TodoService {
     return this.http.get<TodoItem[]>(API_URL);
   }
 
-  getComplete(): Observable<TodoItem[]> {
-    return this.http.get<TodoItem[]>(`${API_URL}/complete`);
-  }
-
-  getById(id: number): Observable<TodoItem> {
-    return this.http.get<TodoItem>(`${API_URL}/${id}`);
-  }
-
   create(item: Omit<TodoItem, 'id'>): Observable<TodoItem> {
     return this.http.post<TodoItem>(API_URL, item);
   }

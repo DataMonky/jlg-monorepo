@@ -1,4 +1,5 @@
 using Microsoft.EntityFrameworkCore;
+using todoApi.Repositories;
 using todoApi;
 using todoApi.Configuration;
 using todoApi.Endpoints;
@@ -7,8 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<TodoDb>(opt => opt.UseInMemoryDatabase("TodoList"));
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
-builder.Services.AddCors(options =>                                                                                                     
-      options.AddDefaultPolicy(policy =>                                                 
+builder.Services.AddCors(options =>
+      options.AddDefaultPolicy(policy =>
           policy.WithOrigins("http://localhost:4200")
                 .AllowAnyHeader()
                 .AllowAnyMethod()));
@@ -20,6 +21,9 @@ builder.Services.AddOpenApiDocument(config =>
     config.Title = "TodoAPI v1";
     config.Version = "v1";
 });
+
+builder.Services.AddScoped<ITodoRepository, TodoRepository>();
+
 var app = builder.Build();
 
 app.SeedData();

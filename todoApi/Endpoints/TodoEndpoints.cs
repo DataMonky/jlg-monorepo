@@ -1,44 +1,30 @@
 namespace todoApi.Endpoints;
 
-using Microsoft.EntityFrameworkCore;
+using todoApi.Repositories;
 
 public static class TodoEndpoints
 {
     public static WebApplication MapTodoEndpoints(this WebApplication app)
     {
-        app.MapGet("/todoitems", async (TodoDb db) => await db.Todos.ToListAsync());
+        app.MapGet("/todoitems", async (ITodoRepository repo) => await repo.GetAllAsync());
 
-        app.MapPost("/todoitems", async (Todo todo, TodoDb db) =>
+        app.MapPost("/todoitems", async (Todo todo, ITodoRepository repo) =>
         {
-            db.Todos.Add(todo);
-            await db.SaveChangesAsync();
-
-            return Results.Created($"/todoitems/{todo.Id}", todo);
+            var createdTodo = await repo.CreateAsync(todo);
+            return Results.Created($"/todoitems/{createdTodo.Id}", createdTodo);
         });
 
-        app.MapDelete("/todoitems/{id}", async (int id, TodoDb db) =>
+        app.MapDelete("/todoitems/{id}", async (int id, ITodoRepository repo) =>
         {
-            if (await db.Todos.FindAsync(id) is Todo todo)
-            {
-                db.Todos.Remove(todo);
-                await db.SaveChangesAsync();
-                return Results.NoContent();
-            }
-
-            return Results.NotFound();
+            var result = await repo.DeleteAsync(id);
+            if (!result) return Results.NotFound();
+            return Results.NoContent();
         });
 
-        app.MapPut("/todoitems/{id}", async (int id, Todo inputTodo, TodoDb db) =>
+        app.MapPut("/todoitems/{id}", async (int id, Todo inputTodo, ITodoRepository repo) =>
         {
-            var todo = await db.Todos.FindAsync(id);
-
-            if (todo is null) return Results.NotFound();
-
-            todo.Name = inputTodo.Name;
-            todo.IsComplete = inputTodo.IsComplete;
-
-            await db.SaveChangesAsync();
-
+            var result = await repo.UpdateAsync(id, inputTodo);
+            if (!result) return Results.NotFound();
             return Results.NoContent();
         });
 
