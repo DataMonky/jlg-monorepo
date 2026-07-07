@@ -21,25 +21,30 @@ export class TodosComponent implements OnInit {
   });
 
   todos = signal<TodoItem[]>([]);
+  todoToDelete = signal<TodoItem | null>(null);
   loading = signal(false);
   error = signal<string | null>(null);
 
-  filter = signal<'all' | 'pending' | 'completed'>('pending');                           
-                                                                                                                                          
+  filter = signal<'all' | 'pending' | 'completed'>('pending');
+
   filteredTodos = computed(() => {
-    const todos = this.todos();                                                                                                           
-    switch (this.filter()) {                                                             
-      case 'pending':                                                                                                                     
+    const todos = this.todos();
+    switch (this.filter()) {
+      case 'pending':
         return todos.filter((t) => !t.isComplete);
-      case 'completed':                                                                                                                   
-        return todos.filter((t) => t.isComplete);                                                                                         
+      case 'completed':
+        return todos.filter((t) => t.isComplete);
       default:
-        return todos;                                                                                                                     
-    }                                                                                    
+        return todos;
+    }
   });
 
   ngOnInit(): void {
     this.loadTodos();
+  }
+
+  deleteTodo(todo: TodoItem): void {
+    this.todoToDelete.set(todo);
   }
 
   onSubmit(): void {
@@ -59,36 +64,40 @@ export class TodosComponent implements OnInit {
     });
   }
 
-  deleteTodo(todo: TodoItem): void {
-    this.error.set(null);
+  confirmDelete(): void {
+    const todo = this.todoToDelete();
+    if (!todo) return;
 
+    this.error.set(null);
     this.todoService.delete(todo.id).subscribe({
       next: () => {
         this.todos.update((currentTodos) => currentTodos.filter((t) => t.id !== todo.id));
+        this.todoToDelete.set(null);
       },
       error: (err) => {
         console.error('Error deleting todo:', err);
         this.error.set('Failed to delete todo. Please try again.');
+        this.todoToDelete.set(null);
       },
     });
   }
 
-  toggleComplete(todo: TodoItem): void {                                                                                                  
-    this.error.set(null);                                                                                                                 
-                                                                                                                                          
+  toggleComplete(todo: TodoItem): void {
+    this.error.set(null);
+
     const updated = { ...todo, isComplete: !todo.isComplete };
-    this.todoService.update(todo.id, updated).subscribe({                                                                                 
-      next: () => {                                                                      
+    this.todoService.update(todo.id, updated).subscribe({
+      next: () => {
         this.todos.update((currentTodos) =>
-          currentTodos.map((t) => (t.id === todo.id ? updated : t))                                                                       
+          currentTodos.map((t) => (t.id === todo.id ? updated : t)),
         );
-      },                                                                                                                                  
-      error: (err) => {                                                                  
-        console.error('Failed to update todo:', err);
-        this.error.set('Failed to update todo. Please try again.');                                                                       
       },
-    });                                                                                                                                   
-  } 
+      error: (err) => {
+        console.error('Failed to update todo:', err);
+        this.error.set('Failed to update todo. Please try again.');
+      },
+    });
+  }
 
   private loadTodos(): void {
     this.loading.set(true);

@@ -1,35 +1,65 @@
-<h1>Todos</h1>                                                                                                                          
-                                                                                         
-  @if (error()) {
-    <p>{{ error() }}</p>
-  }                                                                                                                                       
- <form [formGroup]="form" (ngSubmit)="onSubmit()">                                                                                       
-    <input formControlName="name" type="text" placeholder="New todo name" />             
-    <button type="submit" [disabled]="form.invalid">Add</button>                                                                          
-  </form>
-  @if (loading()) {                                                                                                                       
-    <p>Loading...</p>                                                                    
-  } @else {
-    <div>
-    <button (click)="filter.set('all')"                                                                                                   
-            [class.active]="filter() === 'all'">All</button>                                                                              
-    <button (click)="filter.set('pending')" 
-            [class.active]="filter() === 'pending'">Pending</button>                                                                      
-    <button (click)="filter.set('completed')"                                                                                             
-            [class.active]="filter() === 'completed'">Completed</button>
-  </div>  
-    <ul>
-      @for (todo of filteredTodos(); track todo.id) {
-        <li>
-            <input type="checkbox"                                                               
-           [checked]="todo.isComplete" 
-           (change)="toggleComplete(todo)" />
-          <span [class.completed]="todo.isComplete">{{ todo.name }}</span>
-          <button (click)="deleteTodo(todo)">Delete</button>
-        </li>                                                                                                                             
-      }
-      @empty {                                                                                                                            
-        <li>No todos yet.</li>                                                                                                            
-      }
-    </ul>                                                                                                                                 
-  }  
+<div class="container-fluid mt-4 px-3">
+    <h1>Todos</h1>
+
+    @if (error()) {
+    <div class="alert alert-danger" role="alert">{{ error() }}</div>
+    }
+
+    <form [formGroup]="form" (ngSubmit)="onSubmit()" class="mb-3">
+        <div class="input-group">
+            <input formControlName="name" type="text" class="form-control" placeholder="New todo name" />
+            <button type="submit" class="btn btn-primary" [disabled]="form.invalid">Add</button>
+        </div>
+    </form>
+
+    <div class="btn-group mb-3">
+        <button class="btn btn-outline-secondary" [class.active]="filter() === 'all'"
+            (click)="filter.set('all')">All</button>
+        <button class="btn btn-outline-secondary" [class.active]="filter() === 'pending'"
+            (click)="filter.set('pending')">Pending</button>
+        <button class="btn btn-outline-secondary" [class.active]="filter() === 'completed'"
+            (click)="filter.set('completed')">Completed</button>
+    </div>
+
+    @if (loading()) {
+    <p class="text-muted">Loading...</p>
+    } @else {
+    <ul class="list-group">
+        @for (todo of filteredTodos(); track todo.id) {
+        <li class="list-group-item d-flex align-items-center">
+            <input type="checkbox" class="form-check-input me-2" [checked]="todo.isComplete"
+                (change)="toggleComplete(todo)" />
+            <span [class.text-decoration-line-through]="todo.isComplete" [class.text-muted]="todo.isComplete"
+                class="flex-grow-1">
+                {{ todo.name }}
+            </span>
+            <button class="btn btn-danger btn-sm" (click)="deleteTodo(todo)">Delete</button>
+        </li>
+        }
+        @empty {
+        <li class="list-group-item text-muted">No todos yet.</li>
+        }
+    </ul>
+    }
+</div>
+
+@if (todoToDelete()) {
+<div class="modal fade show d-block" tabindex="-1">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Confirm Delete</h5>
+                <button type="button" class="btn-close" (click)="todoToDelete.set(null)"></button>
+            </div>
+            <div class="modal-body">
+                <p>Are you sure you want to delete "<strong>{{ todoToDelete()!.name }}</strong>"?</p>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-secondary" (click)="todoToDelete.set(null)">Cancel</button>
+                <button class="btn btn-danger" (click)="confirmDelete()">Delete</button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="modal-backdrop fade show"></div>
+}
