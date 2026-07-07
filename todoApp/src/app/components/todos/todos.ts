@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, inject, OnInit, signal } from '@angular/core';
+import { Component, computed, inject, OnInit, signal } from '@angular/core';
 import { TodoService } from '../../services/todo.service';
 import { TodoItem } from '../../models/todo-item';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -23,6 +23,20 @@ export class TodosComponent implements OnInit {
   todos = signal<TodoItem[]>([]);
   loading = signal(false);
   error = signal<string | null>(null);
+
+  filter = signal<'all' | 'pending' | 'completed'>('pending');                           
+                                                                                                                                          
+  filteredTodos = computed(() => {
+    const todos = this.todos();                                                                                                           
+    switch (this.filter()) {                                                             
+      case 'pending':                                                                                                                     
+        return todos.filter((t) => !t.isComplete);
+      case 'completed':                                                                                                                   
+        return todos.filter((t) => t.isComplete);                                                                                         
+      default:
+        return todos;                                                                                                                     
+    }                                                                                    
+  });
 
   ngOnInit(): void {
     this.loadTodos();

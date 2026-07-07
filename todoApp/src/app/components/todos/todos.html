@@ -10,8 +10,16 @@
   @if (loading()) {                                                                                                                       
     <p>Loading...</p>                                                                    
   } @else {
+    <div>
+    <button (click)="filter.set('all')"                                                                                                   
+            [class.active]="filter() === 'all'">All</button>                                                                              
+    <button (click)="filter.set('pending')" 
+            [class.active]="filter() === 'pending'">Pending</button>                                                                      
+    <button (click)="filter.set('completed')"                                                                                             
+            [class.active]="filter() === 'completed'">Completed</button>
+  </div>  
     <ul>
-      @for (todo of todos(); track todo.id) {
+      @for (todo of filteredTodos(); track todo.id) {
         <li>
             <input type="checkbox"                                                               
            [checked]="todo.isComplete" 
