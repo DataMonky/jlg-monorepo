@@ -50,6 +50,12 @@ export class TodosComponent implements OnInit {
   onSubmit(): void {
     if (this.form.invalid) return;
 
+    const name = this.form.value.name.trim();
+    if (this.todos().some((t) => t.name?.toLowerCase() === name.toLowerCase())) {
+      this.error.set('A todo with this name already exists.');
+      return;
+    }
+
     this.error.set(null);
 
     this.todoService.create(this.form.value).subscribe({
