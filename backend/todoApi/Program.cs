@@ -1,11 +1,8 @@
-using Microsoft.EntityFrameworkCore;
-using todoApi.Repositories;
-using todoApi;
-using todoApi.Configuration;
+using todoApi.Infrastructure;
 using todoApi.Endpoints;
 
 var builder = WebApplication.CreateBuilder(args);
-builder.Services.AddDbContext<TodoDb>(opt => opt.UseInMemoryDatabase("TodoList"));
+builder.Services.AddInfrastructure();
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
 builder.Services.AddCors(options =>
@@ -22,11 +19,8 @@ builder.Services.AddOpenApiDocument(config =>
     config.Version = "v1";
 });
 
-builder.Services.AddScoped<ITodoRepository, TodoRepository>();
-
 var app = builder.Build();
 
-app.SeedData();
 app.UseCors();
 
 if (app.Environment.IsDevelopment())
