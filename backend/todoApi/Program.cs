@@ -1,7 +1,11 @@
+using MediatR;
 using todoApi.Infrastructure;
 using todoApi.Endpoints;
+using todoApi.Application.Commands;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Services.AddMediatR(cfg =>
+      cfg.RegisterServicesFromAssembly(typeof(CreateTodoCommand).Assembly));
 builder.Services.AddInfrastructure();
 builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
